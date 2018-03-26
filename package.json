@@ -1,0 +1,23 @@
+{
+	"name"         : "@detox/bootstrap-node",
+	"description"  : "Bootstrap node implementation for Detox network",
+	"keywords"     : [],
+	"version"      : "",
+	"homepage"     : "https://github.com/Detox/bootstrap-node",
+	"author"       : "Nazar Mokrynskyi <nazar@mokrynskyi.com>",
+	"repository"   : {
+		"type" : "git",
+		"url"  : "git://github.com/Detox/bootstrap-node.git"
+	},
+	"license"      : "0BSD",
+	"main"         : "src/index.js",
+	"files"        : [
+		"src"
+	],
+	"scripts"      : {
+		"test" : "tape tests/**/*.js"
+	},
+	"dependencies" : {
+		"@detox/core" : "^0.8.0"
+	}
+}
