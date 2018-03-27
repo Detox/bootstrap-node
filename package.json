@@ -11,13 +11,22 @@
 	},
 	"license"      : "0BSD",
 	"main"         : "src/index.js",
+	"bin"          : {
+		"detox-bootstrap-node" : "bin/detox-bootstrap-node.js"
+	},
 	"files"        : [
 		"src"
 	],
 	"scripts"      : {
-		"test" : "tape tests/**/*.js"
+		"detox-bootstrap-node" : "bin/detox-bootstrap-node.js",
+		"test"                 : "tape tests/**/*.js"
 	},
 	"dependencies" : {
-		"@detox/core" : "^0.8.0"
+		"@detox/core"   : "^0.8.0",
+		"async-eventer" : "^1.1.5",
+		"yargs"         : "^11.0.0"
+	},
+	"yargs"        : {
+		"parse-numbers" : false
 	}
 }
