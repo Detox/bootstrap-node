@@ -28,7 +28,7 @@ module.exports	= {Bootstrap_node}
  */
 !function Bootstrap_node (dht_key_seed, bootstrap_nodes, ip, port, address = ip, ice_servers = [], packets_per_second = 1, bucket_size = 2, max_pending_segments = 10, other_dht_options = {})
 	if !(@ instanceof Bootstrap_node)
-		return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options)
+		return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options)
 	async-eventer.call(@)
 
 	<~! detox-core.ready

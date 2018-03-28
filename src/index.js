@@ -37,7 +37,7 @@
     max_pending_segments == null && (max_pending_segments = 10);
     other_dht_options == null && (other_dht_options = {});
     if (!(this instanceof Bootstrap_node)) {
-      return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options);
+      return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options);
     }
     asyncEventer.call(this);
     detoxCore.ready(function(){
