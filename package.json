@@ -15,6 +15,7 @@
 		"detox-bootstrap-node" : "bin/detox-bootstrap-node.js"
 	},
 	"files"        : [
+		"bin",
 		"src"
 	],
 	"scripts"      : {
