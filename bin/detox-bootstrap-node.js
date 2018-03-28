@@ -49,7 +49,10 @@
     'default': 16882,
     describe: 'Port on which to listen'
   }).help().argv;
-  detoxBootstrapNode.Bootstrap_node(argv.seed, [], argv.ip, argv.port, argv.domain_name || argv.ip, [], 5, 100).on('ready', function(){
+  detoxBootstrapNode.Bootstrap_node(argv.seed, [], argv.ip, argv.port, argv.domain_name || argv.ip, [], 10, 100, {
+    maxTables: Math.pow(10, 6),
+    maxPeers: Math.pow(10, 6)
+  }).on('ready', function(){
     var dht_keypair, node_id, host, port;
     dht_keypair = detoxCrypto.create_keypair(argv.seed);
     node_id = Buffer.from(dht_keypair.ed25519['public']).toString('hex');

@@ -55,8 +55,13 @@ detox-bootstrap-node.Bootstrap_node(
 	argv.port
 	argv.domain_name || argv.ip
 	[]
-	5
+	# TODO: Below are almost random numbers, need to be tested under load and likely tweaked, but should work for now
+	10
 	100
+	{
+		maxTables	: 10 ^ 6
+		maxPeers	: 10 ^ 6
+	}
 )
 	.on('ready', !->
 		dht_keypair	= detox-crypto.create_keypair(argv.seed)
