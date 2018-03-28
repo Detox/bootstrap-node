@@ -135,7 +135,7 @@ yargs
 	for let i from 0 til number_of_clients
 		instance	= detox-core.Core(
 			detox-core.generate_seed()
-			argv.bootstrap-node || []
+			argv.bootstrap-node
 			[]
 			10
 			10

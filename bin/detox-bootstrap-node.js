@@ -147,7 +147,7 @@
       });
       function fn$(i){
         var instance;
-        instance = detoxCore.Core(detoxCore.generate_seed(), argv.bootstrapNode || [], [], 10, 10).once('ready', function(){
+        instance = detoxCore.Core(detoxCore.generate_seed(), argv.bootstrapNode, [], 10, 10).once('ready', function(){
           console.log('Node ' + i + ' is ready, #' + (number_of_clients - wait_for + 1) + '/' + number_of_clients);
           --wait_for;
           if (!wait_for) {
