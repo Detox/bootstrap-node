@@ -8,7 +8,8 @@ detox-bootstrap-node	= require('..')
 detox-crypto			= require('@detox/crypto')
 yargs					= require('yargs')
 
-const SEED_LENGTH	= 32
+const ID_LENGTH		= 32
+const SEED_LENGTH	= ID_LENGTH
 
 argv	= yargs
 	.command('$0 <seed> <ip> [domain_name]', '', !->
@@ -43,14 +44,30 @@ argv	= yargs
 	.option('port', {
 		alias		: 'p'
 		default		: 16882
-		describe	: 'Port on which to listen'
+		description	: 'Port on which to listen'
+		type		: 'number'
+	})
+	.option('bootstrap-node', {
+		alias		: 'b'
+		coerce		: (bootstrap_nodes) ->
+			if !Array.isArray(bootstrap_nodes)
+				bootstrap_nodes	= [bootstrap_nodes]
+			for bootstrap_node in bootstrap_nodes
+				[node_id, host, port]	= bootstrap_node.split(':')
+				node_id					= Buffer.from(node_id, 'hex')
+				port					= parseInt(port)
+				if node_id.length != ID_LENGTH
+					throw new Error("Incorrect node_id length in #bootstrap_node")
+				{node_id, host, port}
+		description	: 'Bootstrap nodes to connect to on start, add at least a few of them (to join existing network) as node_id:host:port'
+		type		: 'string'
 	})
 	.help()
 	.argv
 
 instance = detox-bootstrap-node.Bootstrap_node(
 	argv.seed
-	[]
+	argv.bootstrap-node || []
 	argv.ip
 	argv.port
 	argv.domain_name || argv.ip

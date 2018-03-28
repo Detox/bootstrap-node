@@ -5,11 +5,12 @@
    * @author  Nazar Mokrynskyi <nazar@mokrynskyi.com>
    * @license 0BSD
    */
-  var detoxBootstrapNode, detoxCrypto, yargs, SEED_LENGTH, argv, instance;
+  var detoxBootstrapNode, detoxCrypto, yargs, ID_LENGTH, SEED_LENGTH, argv, instance;
   detoxBootstrapNode = require('..');
   detoxCrypto = require('@detox/crypto');
   yargs = require('yargs');
-  SEED_LENGTH = 32;
+  ID_LENGTH = 32;
+  SEED_LENGTH = ID_LENGTH;
   argv = yargs.command('$0 <seed> <ip> [domain_name]', '', function(){
     yargs.positional('seed', {
       coerce: function(seed){
@@ -47,9 +48,35 @@
   }).option('port', {
     alias: 'p',
     'default': 16882,
-    describe: 'Port on which to listen'
+    description: 'Port on which to listen',
+    type: 'number'
+  }).option('bootstrap-node', {
+    alias: 'b',
+    coerce: function(bootstrap_nodes){
+      var i$, len$, bootstrap_node, ref$, node_id, host, port, results$ = [];
+      if (!Array.isArray(bootstrap_nodes)) {
+        bootstrap_nodes = [bootstrap_nodes];
+      }
+      for (i$ = 0, len$ = bootstrap_nodes.length; i$ < len$; ++i$) {
+        bootstrap_node = bootstrap_nodes[i$];
+        ref$ = bootstrap_node.split(':'), node_id = ref$[0], host = ref$[1], port = ref$[2];
+        node_id = Buffer.from(node_id, 'hex');
+        port = parseInt(port);
+        if (node_id.length !== ID_LENGTH) {
+          throw new Error("Incorrect node_id length in " + bootstrap_node);
+        }
+        results$.push({
+          node_id: node_id,
+          host: host,
+          port: port
+        });
+      }
+      return results$;
+    },
+    description: 'Bootstrap nodes to connect to on start, add at least a few of them (to join existing network) as node_id:host:port',
+    type: 'string'
   }).help().argv;
-  instance = detoxBootstrapNode.Bootstrap_node(argv.seed, [], argv.ip, argv.port, argv.domain_name || argv.ip, [], 10, 100, {
+  instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, argv.domain_name || argv.ip, [], 10, 100, {
     maxTables: Math.pow(10, 6),
     maxPeers: Math.pow(10, 6)
   }).on('ready', function(){
