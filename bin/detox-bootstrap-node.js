@@ -76,7 +76,7 @@
     description: 'Bootstrap nodes to connect to on start, add at least a few of them (to join existing network) as node_id:host:port',
     type: 'string'
   }).help().argv;
-  instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, argv.domain_name || argv.ip, [], 10, 100, {
+  instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, argv.domain_name || argv.ip, [], 10, 50, {
     maxTables: Math.pow(10, 6),
     maxPeers: Math.pow(10, 6)
   }).on('ready', function(){

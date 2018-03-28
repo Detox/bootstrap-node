@@ -74,7 +74,7 @@ instance = detox-bootstrap-node.Bootstrap_node(
 	[]
 	# TODO: Below are almost random numbers, need to be tested under load and likely tweaked, but should work for now
 	10
-	100
+	50
 	{
 		maxTables	: 10 ^ 6
 		maxPeers	: 10 ^ 6

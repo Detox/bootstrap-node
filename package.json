@@ -23,7 +23,7 @@
 		"test"                 : "tape tests/**/*.js"
 	},
 	"dependencies" : {
-		"@detox/core"   : "^0.9.0",
+		"@detox/core"   : "^0.10.0",
 		"async-eventer" : "^1.1.5",
 		"yargs"         : "^11.0.0"
 	},
