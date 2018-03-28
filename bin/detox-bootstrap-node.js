@@ -5,7 +5,7 @@
    * @author  Nazar Mokrynskyi <nazar@mokrynskyi.com>
    * @license 0BSD
    */
-  var detoxBootstrapNode, detoxCrypto, yargs, SEED_LENGTH, argv;
+  var detoxBootstrapNode, detoxCrypto, yargs, SEED_LENGTH, argv, instance;
   detoxBootstrapNode = require('..');
   detoxCrypto = require('@detox/crypto');
   yargs = require('yargs');
@@ -49,7 +49,7 @@
     'default': 16882,
     describe: 'Port on which to listen'
   }).help().argv;
-  detoxBootstrapNode.Bootstrap_node(argv.seed, [], argv.ip, argv.port, argv.domain_name || argv.ip, [], 10, 100, {
+  instance = detoxBootstrapNode.Bootstrap_node(argv.seed, [], argv.ip, argv.port, argv.domain_name || argv.ip, [], 10, 100, {
     maxTables: Math.pow(10, 6),
     maxPeers: Math.pow(10, 6)
   }).on('ready', function(){
@@ -58,11 +58,16 @@
     node_id = Buffer.from(dht_keypair.ed25519['public']).toString('hex');
     host = argv.domain_name || argv.ip;
     port = argv.port;
-    console.log("Bootstrap node is ready, connect using:");
+    console.log('Bootstrap node is ready, connect using:');
     console.log(JSON.stringify({
       node_id: node_id,
       host: host,
       port: port
     }, null, '  '));
+  });
+  process.on('SIGINT', function(){
+    console.log('Got a SIGINT, stop everything and exit');
+    instance.stop();
+    process.exit(0);
   });
 }).call(this);

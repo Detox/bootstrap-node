@@ -47,5 +47,10 @@
       });
     });
   }
+  Bootstrap_node.prototype = {
+    stop: function(){
+      this._core_instance.destroy();
+    }
+  };
   Bootstrap_node.prototype = Object.assign(Object.create(asyncEventer.prototype), Bootstrap_node.prototype);
 }).call(this);

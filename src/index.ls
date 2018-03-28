@@ -39,6 +39,8 @@ module.exports	= {Bootstrap_node}
 		)
 
 # TODO: Node introspection methods, possibly for dynamic CLI UI or debugging purposes
-#Bootstrap_node:: =
+Bootstrap_node:: =
+	stop : !->
+		@_core_instance.destroy()
 
 Bootstrap_node:: = Object.assign(Object.create(async-eventer::), Bootstrap_node::)

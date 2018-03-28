@@ -48,7 +48,7 @@ argv	= yargs
 	.help()
 	.argv
 
-detox-bootstrap-node.Bootstrap_node(
+instance = detox-bootstrap-node.Bootstrap_node(
 	argv.seed
 	[]
 	argv.ip
@@ -68,6 +68,12 @@ detox-bootstrap-node.Bootstrap_node(
 		node_id		= Buffer.from(dht_keypair.ed25519.public).toString('hex')
 		host		= argv.domain_name || argv.ip
 		port		= argv.port
-		console.log "Bootstrap node is ready, connect using:"
+		console.log 'Bootstrap node is ready, connect using:'
 		console.log JSON.stringify({node_id, host, port}, null, '  ')
 	)
+
+process.on('SIGINT', !->
+	console.log 'Got a SIGINT, stop everything and exit'
+	instance.stop()
+	process.exit(0)
+)
