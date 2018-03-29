@@ -13,7 +13,7 @@ Now you can use obtained image as binary to start a bootstrap node:
 ```bash
 docker run --rm -it -p 127.0.0.1:16882:16882 detox-bootstrap-node 0000000000000000000000000000000000000000000000000000000000000000 0.0.0.0 127.0.0.1
 ```
-Execute is without arguments to get help message:
+Execute it without arguments to get help message:
 ```bash
 docker run --rm -it detox-bootstrap-node
 ```
