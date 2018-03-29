@@ -1,6 +1,7 @@
 # Detox bootstrap node
 Bootstrap node implementation for Detox network.
 
+## How to use
 Recommended way to run a bootstrap node at the moment is using manually built Docker image:
 ```bash
 git clone git@github.com:Detox/bootstrap-node.git detox-bootstrap-node
@@ -17,6 +18,7 @@ Execute is without arguments to get help message:
 docker run --rm -it detox-bootstrap-node
 ```
 
+NOTE: If you run it in production, make sure to use unique seed and keep it private.
 
 ## Contribution
 Feel free to create issues and send pull requests (for big changes create an issue first and link it from the PR), they are highly appreciated!
