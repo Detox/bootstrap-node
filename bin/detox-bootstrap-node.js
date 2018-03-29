@@ -126,16 +126,15 @@
     var this$ = this;
     console.log('Starting dummy clients...');
     detoxCore.ready(function(){
-      var number_of_clients, wait_for, instances, i$;
-      number_of_clients = argv.number_of_clients;
-      wait_for = number_of_clients;
+      var instances, promise, i$, to$;
       instances = [];
-      for (i$ = 0; i$ < number_of_clients; ++i$) {
+      promise = Promise.resolve();
+      for (i$ = 0, to$ = argv.number_of_clients; i$ < to$; ++i$) {
         (fn$.call(this$, i$));
       }
-      function ready_callback(){
+      promise.then(function(){
         console.log('All dummy nodes are ready');
-      }
+      });
       process.on('SIGINT', function(){
         var i$, ref$, len$, instance;
         console.log('Got a SIGINT, stop everything and exit');
@@ -146,15 +145,16 @@
         process.exit(0);
       });
       function fn$(i){
-        var instance;
-        instance = detoxCore.Core(detoxCore.generate_seed(), argv.bootstrapNode, [], 10, 10).once('ready', function(){
-          console.log('Node ' + i + ' is ready, #' + (number_of_clients - wait_for + 1) + '/' + number_of_clients);
-          --wait_for;
-          if (!wait_for) {
-            ready_callback();
-          }
+        promise = promise.then(function(){
+          return new Promise(function(resolve){
+            var instance;
+            instance = detoxCore.Core(detoxCore.generate_seed(), argv.bootstrapNode, [], 10, 10).once('ready', function(){
+              console.log("Node " + i + " is ready");
+              resolve();
+            });
+            instances.push(instance);
+          });
         });
-        instances.push(instance);
       }
     });
   }
