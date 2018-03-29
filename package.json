@@ -1,7 +1,12 @@
 {
 	"name"         : "@detox/bootstrap-node",
 	"description"  : "Bootstrap node implementation for Detox network",
-	"keywords"     : [],
+	"keywords"     : [
+		"detox",
+		"anonymous",
+		"distributed",
+		"p2p"
+	],
 	"version"      : "",
 	"homepage"     : "https://github.com/Detox/bootstrap-node",
 	"author"       : "Nazar Mokrynskyi <nazar@mokrynskyi.com>",
