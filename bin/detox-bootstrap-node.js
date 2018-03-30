@@ -147,7 +147,7 @@
         (fn$.call(this$, i$));
       }
       promise.then(function(){
-        console.log('All dummy nodes are ready');
+        console.log('All dummy clients are ready');
       });
       process.on('SIGINT', function(){
         var i$, ref$, len$, instance;

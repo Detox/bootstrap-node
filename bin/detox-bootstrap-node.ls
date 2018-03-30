@@ -157,7 +157,7 @@ yargs
 				instances.push(instance)
 
 	promise.then !->
-		console.log 'All dummy nodes are ready'
+		console.log 'All dummy clients are ready'
 
 	process.on('SIGINT', !->
 		console.log "\nGot a SIGINT, stop everything and exit"
