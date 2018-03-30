@@ -32,10 +32,13 @@
     var this$ = this;
     address == null && (address = ip);
     ice_servers == null && (ice_servers = []);
-    packets_per_second == null && (packets_per_second = 1);
-    bucket_size == null && (bucket_size = 2);
+    packets_per_second == null && (packets_per_second = 10);
+    bucket_size == null && (bucket_size = 50);
     max_pending_segments == null && (max_pending_segments = 10);
-    other_dht_options == null && (other_dht_options = {});
+    other_dht_options == null && (other_dht_options = {
+      maxTables: Math.pow(10, 6),
+      maxPeers: Math.pow(10, 6)
+    });
     if (!(this instanceof Bootstrap_node)) {
       return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options);
     }

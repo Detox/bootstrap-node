@@ -103,14 +103,6 @@ yargs
 		argv.ip
 		argv.port
 		argv.domain_name || argv.ip
-		[]
-		# TODO: Below are almost random numbers, need to be tested under load and likely tweaked, but should work for now
-		10
-		50
-		{
-			maxTables	: 10 ^ 6
-			maxPeers	: 10 ^ 6
-		}
 	)
 		.on('ready', !->
 			dht_keypair	= detox-crypto.create_keypair(argv.seed)

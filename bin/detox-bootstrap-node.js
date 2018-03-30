@@ -101,10 +101,7 @@
   function start_bootstrap_node(argv){
     var instance;
     console.log('Starting bootstrap node...');
-    instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, argv.domain_name || argv.ip, [], 10, 50, {
-      maxTables: Math.pow(10, 6),
-      maxPeers: Math.pow(10, 6)
-    }).on('ready', function(){
+    instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, argv.domain_name || argv.ip).on('ready', function(){
       var dht_keypair, node_id, host, port, last_length, update;
       dht_keypair = detoxCrypto.create_keypair(argv.seed);
       node_id = Buffer.from(dht_keypair.ed25519['public']).toString('hex');
