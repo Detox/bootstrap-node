@@ -37,6 +37,9 @@ module.exports	= {Bootstrap_node}
 			@_core_instance.start_bootstrap_node(ip, port, address)
 			@fire('ready')
 		)
+		.on('connected_nodes_count', (count) !~>
+			@fire('connected_nodes_count', count)
+		)
 
 # TODO: Node introspection methods, possibly for dynamic CLI UI or debugging purposes
 Bootstrap_node:: =

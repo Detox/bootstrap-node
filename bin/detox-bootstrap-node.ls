@@ -87,6 +87,11 @@ yargs
 				.option('bootstrap-node', Object.assign({required: true}, bootstrap_node_option))
 		start_dummy_clients
 	)
+	.option('interactive', {
+		alias		: 'i'
+		description	: 'Will display some useful live information about instance'
+		type		: 'boolean'
+	})
 	.help()
 	.argv
 
@@ -117,10 +122,21 @@ yargs
 			console.log JSON.stringify({node_id, host, port}, null, '  ')
 			console.log 'Or for CLI:'
 			console.log JSON.stringify("#node_id:#host:#port")
+
+			if argv.interactive
+				console.log "\nBootstrap node stats:"
+				last_length	= 0
+				update	= (count) !->
+					process.stdout.write("\r" + ' '.repeat(last_length))
+					to_print	= "Connected nodes : #count"
+					process.stdout.write("\r#to_print")
+					last_length	:= to_print.length
+				update(0)
+				instance.on('connected_nodes_count', update)
 		)
 
 	process.on('SIGINT', !->
-		console.log 'Got a SIGINT, stop everything and exit'
+		console.log "\nGot a SIGINT, stop everything and exit"
 		instance.stop()
 		process.exit(0)
 	)
@@ -152,7 +168,7 @@ yargs
 		console.log 'All dummy nodes are ready'
 
 	process.on('SIGINT', !->
-		console.log 'Got a SIGINT, stop everything and exit'
+		console.log "\nGot a SIGINT, stop everything and exit"
 		for instance in instances
 			instance.destroy()
 		process.exit(0)

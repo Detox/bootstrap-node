@@ -93,7 +93,11 @@
     }).option('bootstrap-node', Object.assign({
       required: true
     }, bootstrap_node_option));
-  }, start_dummy_clients).help().argv;
+  }, start_dummy_clients).option('interactive', {
+    alias: 'i',
+    description: 'Will display some useful live information about instance',
+    type: 'boolean'
+  }).help().argv;
   function start_bootstrap_node(argv){
     var instance;
     console.log('Starting bootstrap node...');
@@ -101,7 +105,7 @@
       maxTables: Math.pow(10, 6),
       maxPeers: Math.pow(10, 6)
     }).on('ready', function(){
-      var dht_keypair, node_id, host, port;
+      var dht_keypair, node_id, host, port, last_length, update;
       dht_keypair = detoxCrypto.create_keypair(argv.seed);
       node_id = Buffer.from(dht_keypair.ed25519['public']).toString('hex');
       host = argv.domain_name || argv.ip;
@@ -115,9 +119,22 @@
       }, null, '  '));
       console.log('Or for CLI:');
       console.log(JSON.stringify(node_id + ":" + host + ":" + port));
+      if (argv.interactive) {
+        console.log("\nBootstrap node stats:");
+        last_length = 0;
+        update = function(count){
+          var to_print;
+          process.stdout.write("\r" + ' '.repeat(last_length));
+          to_print = "Connected nodes : " + count;
+          process.stdout.write("\r" + to_print);
+          last_length = to_print.length;
+        };
+        update(0);
+        instance.on('connected_nodes_count', update);
+      }
     });
     process.on('SIGINT', function(){
-      console.log('Got a SIGINT, stop everything and exit');
+      console.log("\nGot a SIGINT, stop everything and exit");
       instance.stop();
       process.exit(0);
     });
@@ -137,7 +154,7 @@
       });
       process.on('SIGINT', function(){
         var i$, ref$, len$, instance;
-        console.log('Got a SIGINT, stop everything and exit');
+        console.log("\nGot a SIGINT, stop everything and exit");
         for (i$ = 0, len$ = (ref$ = instances).length; i$ < len$; ++i$) {
           instance = ref$[i$];
           instance.destroy();
