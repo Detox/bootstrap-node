@@ -87,6 +87,12 @@ yargs
 				.option('bootstrap-node', Object.assign({required: true}, bootstrap_node_option))
 		start_dummy_clients
 	)
+	.command(
+		'seed'
+		'Generates random seed, suitable for starting bootstrap node'
+		!->
+			console.log(Buffer.from(detox-core.generate_seed()).toString('hex'))
+	)
 	.option('interactive', {
 		alias		: 'i'
 		description	: 'Will display some useful live information about instance'

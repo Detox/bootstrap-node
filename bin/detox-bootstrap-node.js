@@ -93,7 +93,9 @@
     }).option('bootstrap-node', Object.assign({
       required: true
     }, bootstrap_node_option));
-  }, start_dummy_clients).option('interactive', {
+  }, start_dummy_clients).command('seed', 'Generates random seed, suitable for starting bootstrap node', function(){
+    console.log(Buffer.from(detoxCore.generate_seed()).toString('hex'));
+  }).option('interactive', {
     alias: 'i',
     description: 'Will display some useful live information about instance',
     type: 'boolean'
