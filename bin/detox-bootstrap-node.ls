@@ -142,27 +142,28 @@ yargs
 !function start_dummy_clients (argv)
 	console.log 'Starting dummy clients...'
 	<~! detox-core.ready
-	instances	= []
-	promise		= Promise.resolve()
+	number_of_clients	= argv.number_of_clients
+	wait_for			= argv.number_of_clients
+	instances			= []
 
 	for let i from 0 til argv.number_of_clients
-		promise	:= promise.then ->
-			new Promise (resolve) !->
-				instance	= detox-core.Core(
-					detox-core.generate_seed()
-					argv.bootstrap-node
-					[]
-					10
-					10
-				)
-					.once('ready', !->
-						console.log("Node #i is ready")
+		instance	= detox-core.Core(
+			detox-core.generate_seed()
+			argv.bootstrap-node
+			[]
+			10
+			10
+		)
+			.once('ready', !->
+				console.log('Node ' + i + ' is ready, #' + (argv.number_of_clients - wait_for + 1) + '/' + argv.number_of_clients)
 
-						resolve()
-					)
-				instances.push(instance)
+				--wait_for
+				if !wait_for
+					ready_callback()
+			)
+		instances.push(instance)
 
-	promise.then !->
+	!function ready_callback
 		console.log 'All dummy clients are ready'
 
 	process.on('SIGINT', !->
