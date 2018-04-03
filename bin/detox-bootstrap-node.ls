@@ -97,6 +97,18 @@ yargs
 		description	: 'Will display some useful live information about instance'
 		type		: 'boolean'
 	})
+	.option('stun', {
+		alias		: 's'
+		coerce		: (stun_servers) ->
+			if !Array.isArray(stun_servers)
+				stun_servers	= [stun_servers]
+			for stun_server in stun_servers
+				if !stun_server.startsWith('stun:')
+					throw new Error('Incorrect stun server ' + stun_server)
+				{urls: stun_server}
+		description	: 'Stun server like stun:stun.l.google.com:19302, add at least one if public IP is not directly assigned to this machine'
+		type		: 'string'
+	})
 	.help()
 	.argv
 
@@ -108,6 +120,7 @@ yargs
 		argv.ip
 		argv.port
 		argv.domain_name || argv.ip
+		argv.stun || []
 	)
 		.on('ready', !->
 			dht_keypair	= detox-crypto.create_keypair(argv.seed)
@@ -149,7 +162,7 @@ yargs
 		instance	= detox-core.Core(
 			detox-core.generate_seed()
 			argv.bootstrap-node
-			[]
+			argv.stun || []
 			10
 			10
 		)

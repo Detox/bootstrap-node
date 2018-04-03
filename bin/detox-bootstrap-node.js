@@ -97,11 +97,31 @@
     alias: 'i',
     description: 'Will display some useful live information about instance',
     type: 'boolean'
+  }).option('stun', {
+    alias: 's',
+    coerce: function(stun_servers){
+      var i$, len$, stun_server, results$ = [];
+      if (!Array.isArray(stun_servers)) {
+        stun_servers = [stun_servers];
+      }
+      for (i$ = 0, len$ = stun_servers.length; i$ < len$; ++i$) {
+        stun_server = stun_servers[i$];
+        if (!stun_server.startsWith('stun:')) {
+          throw new Error('Incorrect stun server ' + stun_server);
+        }
+        results$.push({
+          urls: stun_server
+        });
+      }
+      return results$;
+    },
+    description: 'Stun server like stun:stun.l.google.com:19302, add at least one if public IP is not directly assigned to this machine',
+    type: 'string'
   }).help().argv;
   function start_bootstrap_node(argv){
     var instance;
     console.log('Starting bootstrap node...');
-    instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, argv.domain_name || argv.ip).on('ready', function(){
+    instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, argv.domain_name || argv.ip, argv.stun || []).on('ready', function(){
       var dht_keypair, node_id, host, port, last_length, update;
       dht_keypair = detoxCrypto.create_keypair(argv.seed);
       node_id = Buffer.from(dht_keypair.ed25519['public']).toString('hex');
@@ -161,7 +181,7 @@
       });
       function fn$(i){
         var instance;
-        instance = detoxCore.Core(detoxCore.generate_seed(), argv.bootstrapNode, [], 10, 10).once('ready', function(){
+        instance = detoxCore.Core(detoxCore.generate_seed(), argv.bootstrapNode, argv.stun || [], 10, 10).once('ready', function(){
           console.log('Node ' + i + ' is ready, #' + (argv.number_of_clients - wait_for + 1) + '/' + argv.number_of_clients);
           --wait_for;
           if (!wait_for) {
