@@ -93,9 +93,7 @@
     }).option('bootstrap-node', Object.assign({
       required: true
     }, bootstrap_node_option));
-  }, start_dummy_clients).command('seed', 'Generates random seed, suitable for starting bootstrap node', function(){
-    console.log(Buffer.from(detoxCore.generate_seed()).toString('hex'));
-  }).option('interactive', {
+  }, start_dummy_clients).command('seed', 'Generates random seed, suitable for starting bootstrap node', generate_seed).option('interactive', {
     alias: 'i',
     description: 'Will display some useful live information about instance',
     type: 'boolean'
@@ -172,6 +170,16 @@
         });
         instances.push(instance);
       }
+    });
+  }
+  function generate_seed(){
+    var this$ = this;
+    detoxCrypto.ready(function(){
+      var seed, keypair;
+      seed = detoxCore.generate_seed();
+      keypair = detoxCrypto.create_keypair(seed);
+      console.log('Seed: ' + Buffer.from(seed).toString('hex'));
+      console.log('Node ID: ' + Buffer.from(keypair.ed25519['public']).toString('hex'));
     });
   }
 }).call(this);

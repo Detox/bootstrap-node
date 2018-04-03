@@ -90,8 +90,7 @@ yargs
 	.command(
 		'seed'
 		'Generates random seed, suitable for starting bootstrap node'
-		!->
-			console.log(Buffer.from(detox-core.generate_seed()).toString('hex'))
+		generate_seed
 	)
 	.option('interactive', {
 		alias		: 'i'
@@ -172,3 +171,10 @@ yargs
 			instance.destroy()
 		process.exit(0)
 	)
+
+!function generate_seed
+	<~! detox-crypto.ready
+	seed		= detox-core.generate_seed()
+	keypair		= detox-crypto.create_keypair(seed)
+	console.log('Seed: ' + Buffer.from(seed).toString('hex'))
+	console.log('Node ID: ' + Buffer.from(keypair.ed25519.public).toString('hex'))
