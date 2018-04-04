@@ -160,6 +160,11 @@
       instance.stop();
       process.exit(0);
     });
+    process.on('SIGTERM', function(){
+      console.log("\nGot a SIGTERM, stop everything and exit");
+      instance.stop();
+      process.exit(0);
+    });
   }
   function start_dummy_clients(argv){
     var this$ = this;
@@ -178,6 +183,15 @@
       process.on('SIGINT', function(){
         var i$, ref$, len$, instance;
         console.log("\nGot a SIGINT, stop everything and exit");
+        for (i$ = 0, len$ = (ref$ = instances).length; i$ < len$; ++i$) {
+          instance = ref$[i$];
+          instance.destroy();
+        }
+        process.exit(0);
+      });
+      process.on('SIGTERM', function(){
+        var i$, ref$, len$, instance;
+        console.log("\nGot a SIGTERM, stop everything and exit");
         for (i$ = 0, len$ = (ref$ = instances).length; i$ < len$; ++i$) {
           instance = ref$[i$];
           instance.destroy();

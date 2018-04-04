@@ -157,6 +157,11 @@ yargs
 		instance.stop()
 		process.exit(0)
 	)
+	process.on('SIGTERM', !->
+		console.log "\nGot a SIGTERM, stop everything and exit"
+		instance.stop()
+		process.exit(0)
+	)
 
 !function start_dummy_clients (argv)
 	console.log 'Starting dummy clients...'
@@ -187,6 +192,12 @@ yargs
 
 	process.on('SIGINT', !->
 		console.log "\nGot a SIGINT, stop everything and exit"
+		for instance in instances
+			instance.destroy()
+		process.exit(0)
+	)
+	process.on('SIGTERM', !->
+		console.log "\nGot a SIGTERM, stop everything and exit"
 		for instance in instances
 			instance.destroy()
 		process.exit(0)
