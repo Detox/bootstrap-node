@@ -49,12 +49,12 @@ module.exports	= {Bootstrap_node}
 	<~! detox-core.ready
 	@_core_instance	= detox-core.Core(dht_key_seed, bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options)
 		.on('ready', !~>
-			@_core_instance.start_bootstrap_node(ip, port, address)
 			@fire('ready')
 		)
 		.on('connected_nodes_count', (count) !~>
 			@fire('connected_nodes_count', count)
 		)
+	@_core_instance.start_bootstrap_node(ip, port, address)
 
 # TODO: Node introspection methods, possibly for dynamic CLI UI or debugging purposes
 Bootstrap_node:: =

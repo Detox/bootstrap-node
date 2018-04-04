@@ -45,11 +45,11 @@
     asyncEventer.call(this);
     detoxCore.ready(function(){
       this$._core_instance = detoxCore.Core(dht_key_seed, bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options).on('ready', function(){
-        this$._core_instance.start_bootstrap_node(ip, port, address);
         this$.fire('ready');
       }).on('connected_nodes_count', function(count){
         this$.fire('connected_nodes_count', count);
       });
+      this$._core_instance.start_bootstrap_node(ip, port, address);
     });
   }
   Bootstrap_node.prototype = {
