@@ -67,6 +67,12 @@ yargs
 					description	: 'Port on which to listen'
 					type		: 'number'
 				})
+				.option('public-port', {
+					alias		: 'P'
+					default		: 16882
+					description	: 'Port on which to listen'
+					type		: 'number'
+				})
 				.option('bootstrap-node', bootstrap_node_option)
 		start_bootstrap_node
 	)
@@ -114,19 +120,20 @@ yargs
 
 !function start_bootstrap_node (argv)
 	console.log 'Starting bootstrap node...'
+	host	= argv.domain_name || argv.ip
+	port	= argv.public-port || argv.port
 	instance = detox-bootstrap-node.Bootstrap_node(
 		argv.seed
 		argv.bootstrap-node || []
 		argv.ip
 		argv.port
-		argv.domain_name || argv.ip
+		host
+		port
 		argv.stun || []
 	)
 		.on('ready', !->
 			dht_keypair	= detox-crypto.create_keypair(argv.seed)
 			node_id		= Buffer.from(dht_keypair.ed25519.public).toString('hex')
-			host		= argv.domain_name || argv.ip
-			port		= argv.port
 			console.log 'Bootstrap node is ready!'
 			console.log 'Connect in web UI:'
 			console.log JSON.stringify({node_id, host, port}, null, '  ')

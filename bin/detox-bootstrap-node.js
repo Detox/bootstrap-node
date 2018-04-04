@@ -78,6 +78,11 @@
       'default': 16882,
       description: 'Port on which to listen',
       type: 'number'
+    }).option('public-port', {
+      alias: 'P',
+      'default': 16882,
+      description: 'Port on which to listen',
+      type: 'number'
     }).option('bootstrap-node', bootstrap_node_option);
   }, start_bootstrap_node).command('dummy-clients <number_of_clients>', 'Run dummy clients', function(){
     yargs.positional('number_of_clients', {
@@ -119,14 +124,14 @@
     type: 'string'
   }).help().argv;
   function start_bootstrap_node(argv){
-    var instance;
+    var host, port, instance;
     console.log('Starting bootstrap node...');
-    instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, argv.domain_name || argv.ip, argv.stun || []).on('ready', function(){
-      var dht_keypair, node_id, host, port, last_length, update;
+    host = argv.domain_name || argv.ip;
+    port = argv.publicPort || argv.port;
+    instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, host, port, argv.stun || []).on('ready', function(){
+      var dht_keypair, node_id, last_length, update;
       dht_keypair = detoxCrypto.create_keypair(argv.seed);
       node_id = Buffer.from(dht_keypair.ed25519['public']).toString('hex');
-      host = argv.domain_name || argv.ip;
-      port = argv.port;
       console.log('Bootstrap node is ready!');
       console.log('Connect in web UI:');
       console.log(JSON.stringify({

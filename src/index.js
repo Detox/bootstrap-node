@@ -18,6 +18,7 @@
    * @param {string}			ip
    * @param {number}			port
    * @param {string}			address					Publicly available address that will be returned to other node, typically domain name (instead of using IP)
+   * @param {number}			public_port				Publicly available port on `address`
    * @param {!Array<!Object>}	ice_servers
    * @param {number}			packets_per_second		Each packet send in each direction has exactly the same size and packets are sent at fixed rate (>= 1)
    * @param {number}			bucket_size
@@ -28,9 +29,10 @@
    *
    * @throws {Error}
    */
-  function Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options){
+  function Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, public_port, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options){
     var this$ = this;
     address == null && (address = ip);
+    public_port == null && (public_port = port);
     ice_servers == null && (ice_servers = []);
     packets_per_second == null && (packets_per_second = 10);
     bucket_size == null && (bucket_size = 50);
@@ -40,7 +42,7 @@
       maxPeers: Math.pow(10, 6)
     });
     if (!(this instanceof Bootstrap_node)) {
-      return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options);
+      return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, public_port, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options);
     }
     asyncEventer.call(this);
     detoxCore.ready(function(){
@@ -49,7 +51,7 @@
       }).on('connected_nodes_count', function(count){
         this$.fire('connected_nodes_count', count);
       });
-      this$._core_instance.start_bootstrap_node(ip, port, address);
+      this$._core_instance.start_bootstrap_node(ip, port, address, public_port);
     });
   }
   Bootstrap_node.prototype = {

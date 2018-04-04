@@ -16,6 +16,7 @@ module.exports	= {Bootstrap_node}
  * @param {string}			ip
  * @param {number}			port
  * @param {string}			address					Publicly available address that will be returned to other node, typically domain name (instead of using IP)
+ * @param {number}			public_port				Publicly available port on `address`
  * @param {!Array<!Object>}	ice_servers
  * @param {number}			packets_per_second		Each packet send in each direction has exactly the same size and packets are sent at fixed rate (>= 1)
  * @param {number}			bucket_size
@@ -32,6 +33,7 @@ module.exports	= {Bootstrap_node}
 	ip
 	port
 	address = ip
+	public_port = port
 	ice_servers = []
 	# TODO: Below are almost random numbers, need to be tested under load and likely tweaked, but should work for now
 	packets_per_second = 10
@@ -43,7 +45,7 @@ module.exports	= {Bootstrap_node}
 	}
 )
 	if !(@ instanceof Bootstrap_node)
-		return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options)
+		return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, public_port, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options)
 	async-eventer.call(@)
 
 	<~! detox-core.ready
@@ -54,7 +56,7 @@ module.exports	= {Bootstrap_node}
 		.on('connected_nodes_count', (count) !~>
 			@fire('connected_nodes_count', count)
 		)
-	@_core_instance.start_bootstrap_node(ip, port, address)
+	@_core_instance.start_bootstrap_node(ip, port, address, public_port)
 
 # TODO: Node introspection methods, possibly for dynamic CLI UI or debugging purposes
 Bootstrap_node:: =
