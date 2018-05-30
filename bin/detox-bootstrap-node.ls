@@ -26,7 +26,7 @@ bootstrap_node_option	=
 			if node_id.length != ID_LENGTH
 				throw new Error("Incorrect node_id length in #bootstrap_node")
 			node_id					= node_id.toString('hex')
-			{node_id, host, port}
+		bootstrap_nodes
 	description	: 'Bootstrap nodes, add at least a few to join existing network as node_id:host:port'
 	type		: 'string'
 yargs
@@ -41,7 +41,7 @@ yargs
 						if seed.length != SEED_LENGTH
 							throw new Error('Incorrect seed length')
 						seed
-					description	: 'Hex string of 32-byte seed used for DHT keypair'
+					description	: "Hex string of 32-byte seed used for bootstrap node's keypair"
 					type		: 'string'
 				})
 				.positional('ip', {
@@ -132,13 +132,11 @@ yargs
 		argv.stun || []
 	)
 		.on('ready', !->
-			dht_keypair	= detox-crypto.create_keypair(argv.seed)
-			node_id		= Buffer.from(dht_keypair.ed25519.public).toString('hex')
+			bootstrap_node_keypair	= detox-crypto.create_keypair(argv.seed)
+			node_id					= Buffer.from(bootstrap_node_keypair.ed25519.public).toString('hex')
 			console.log 'Bootstrap node is ready!'
-			console.log 'Connect in web UI:'
-			console.log JSON.stringify({node_id, host, port}, null, '  ')
-			console.log 'Or for CLI:'
-			console.log JSON.stringify("#node_id:#host:#port")
+			console.log 'Connect via:'
+			console.log "#node_id:#host:#port"
 
 			if argv.interactive
 				console.log "\nBootstrap node stats:"
@@ -172,7 +170,6 @@ yargs
 
 	for let i from 0 til argv.number_of_clients
 		instance	= detox-core.Core(
-			detox-core.generate_seed()
 			argv.bootstrap-node
 			argv.stun || []
 			10

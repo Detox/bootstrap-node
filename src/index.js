@@ -14,45 +14,46 @@
   /**
    * @constructor
    *
-   * @param {!Uint8Array}		dht_key_seed			Seed used to generate temporary DHT keypair
+   * @param {!Uint8Array}		bootstrap_keypair_seed	Seed used for bootstrap node's keypair
    * @param {!Array<!Object>}	bootstrap_nodes
    * @param {string}			ip
    * @param {number}			port
-   * @param {string}			address					Publicly available address that will be returned to other node, typically domain name (instead of using IP)
+   * @param {string}			public_address			Publicly available address that will be returned to other node, typically domain name (instead of using IP)
    * @param {number}			public_port				Publicly available port on `address`
    * @param {!Array<!Object>}	ice_servers
    * @param {number}			packets_per_second		Each packet send in each direction has exactly the same size and packets are sent at fixed rate (>= 1)
    * @param {number}			bucket_size
    * @param {number}			max_pending_segments	How much routing segments can be in pending state per one address
-   * @param {!Object}			other_dht_options		Other internal options supported by underlying DHT implementation `webtorrent-dht`
+   * @param {!Object}			options					Other options, see `@detox/core` for details
    *
    * @return {!Bootstrap_node}
    *
    * @throws {Error}
    */
-  function Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, public_port, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options){
+  function Bootstrap_node(bootstrap_keypair_seed, bootstrap_nodes, ip, port, public_address, public_port, ice_servers, packets_per_second, bucket_size, max_pending_segments, options){
     var this$ = this;
-    address == null && (address = ip);
+    public_address == null && (public_address = ip);
     public_port == null && (public_port = port);
     ice_servers == null && (ice_servers = []);
     packets_per_second == null && (packets_per_second = 10);
     bucket_size == null && (bucket_size = 50);
     max_pending_segments == null && (max_pending_segments = 10);
-    other_dht_options == null && (other_dht_options = {
-      maxTables: Math.pow(10, 6),
-      maxPeers: Math.pow(10, 6)
+    options == null && (options = {
+      state_history_size: Math.pow(10, 5),
+      values_cache_size: Math.pow(10, 4),
+      connected_nodes_limit: Math.pow(10, 3)
     });
     if (!(this instanceof Bootstrap_node)) {
-      return new Bootstrap_node(dht_key_seed, bootstrap_nodes, ip, port, address, public_port, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options);
+      return new Bootstrap_node(bootstrap_keypair_seed, bootstrap_nodes, ip, port, public_address, public_port, ice_servers, packets_per_second, bucket_size, max_pending_segments, options);
     }
     asyncEventer.call(this);
     detoxCore.ready(function(){
-      this$._core_instance = detoxCore.Core(dht_key_seed, bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, other_dht_options).on('ready', function(){
+      this$._core_instance = detoxCore.Core(bootstrap_keypair_seed, bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, options).on('ready', function(){
         this$.fire('ready');
       }).on('connected_nodes_count', function(count){
         this$.fire('connected_nodes_count', count);
       });
-      this$._core_instance.start_bootstrap_node(ip, port, address, public_port);
+      this$._core_instance.start_bootstrap_node(bootstrap_keypair_seed, ip, port, public_address, public_port);
     });
   }
   Bootstrap_node.prototype = {

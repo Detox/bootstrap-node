@@ -14,7 +14,7 @@ If you want to create separate network - start without `-b` option, otherwise ma
 docker run -d --name detox-bootstrap-node -p <ip>:16882:16882 nazarpc/detox-bootstrap-node <seed> 0.0.0.0 <domain>[ -b bootstrap_node]
 ```
 * `ip` - publicly available IP
-* `seed` - hex of 32-bytes seed from which DHT keypair is generated (make sure it is unique seed and keep it private)
+* `seed` - hex of 32-bytes seed from which bootstrap node's keypair is generated (make sure it is unique seed and keep it private)
 * `domain` - publicly available domain name (or IP) that other nodes in the network will use in order to reach this node
 * `bootstrap_node` - information about existing bootstrap node in the network (`-b` can be specified multiple times) in form `hex_node_id:domain_or_ip:port`
 

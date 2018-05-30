@@ -17,7 +17,7 @@
   bootstrap_node_option = {
     alias: 'b',
     coerce: function(bootstrap_nodes){
-      var i$, len$, bootstrap_node, ref$, node_id, host, port, results$ = [];
+      var i$, len$, bootstrap_node, ref$, node_id, host, port;
       if (!Array.isArray(bootstrap_nodes)) {
         bootstrap_nodes = [bootstrap_nodes];
       }
@@ -30,13 +30,8 @@
           throw new Error("Incorrect node_id length in " + bootstrap_node);
         }
         node_id = node_id.toString('hex');
-        results$.push({
-          node_id: node_id,
-          host: host,
-          port: port
-        });
       }
-      return results$;
+      return bootstrap_nodes;
     },
     description: 'Bootstrap nodes, add at least a few to join existing network as node_id:host:port',
     type: 'string'
@@ -50,7 +45,7 @@
         }
         return seed;
       },
-      description: 'Hex string of 32-byte seed used for DHT keypair',
+      description: "Hex string of 32-byte seed used for bootstrap node's keypair",
       type: 'string'
     }).positional('ip', {
       coerce: function(ip){
@@ -130,18 +125,12 @@
     host = argv.domain_name || argv.ip;
     port = argv.publicPort || argv.port;
     instance = detoxBootstrapNode.Bootstrap_node(argv.seed, argv.bootstrapNode || [], argv.ip, argv.port, host, port, argv.stun || []).on('ready', function(){
-      var dht_keypair, node_id, last_length, update;
-      dht_keypair = detoxCrypto.create_keypair(argv.seed);
-      node_id = Buffer.from(dht_keypair.ed25519['public']).toString('hex');
+      var bootstrap_node_keypair, node_id, last_length, update;
+      bootstrap_node_keypair = detoxCrypto.create_keypair(argv.seed);
+      node_id = Buffer.from(bootstrap_node_keypair.ed25519['public']).toString('hex');
       console.log('Bootstrap node is ready!');
-      console.log('Connect in web UI:');
-      console.log(JSON.stringify({
-        node_id: node_id,
-        host: host,
-        port: port
-      }, null, '  '));
-      console.log('Or for CLI:');
-      console.log(JSON.stringify(node_id + ":" + host + ":" + port));
+      console.log('Connect via:');
+      console.log(node_id + ":" + host + ":" + port);
       if (argv.interactive) {
         console.log("\nBootstrap node stats:");
         last_length = 0;
@@ -201,7 +190,7 @@
       });
       function fn$(i){
         var instance;
-        instance = detoxCore.Core(detoxCore.generate_seed(), argv.bootstrapNode, argv.stun || [], 10, 10).once('ready', function(){
+        instance = detoxCore.Core(argv.bootstrapNode, argv.stun || [], 10, 10).once('ready', function(){
           console.log('Node ' + i + ' is ready, #' + (argv.number_of_clients - wait_for + 1) + '/' + argv.number_of_clients);
           --wait_for;
           if (!wait_for) {

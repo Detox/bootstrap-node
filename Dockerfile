@@ -1,4 +1,4 @@
-FROM node:9
+FROM node:10
 LABEL maintainer="Nazar Mokrynskyi <nazar@mokrynskyi.com>"
 
 COPY bin/detox-bootstrap-node.js /code/bin/detox-bootstrap-node
