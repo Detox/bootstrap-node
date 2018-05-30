@@ -50,7 +50,7 @@ module.exports	= {Bootstrap_node}
 	async-eventer.call(@)
 
 	<~! detox-core.ready
-	@_core_instance	= detox-core.Core(bootstrap_keypair_seed, bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, options)
+	@_core_instance	= detox-core.Core(bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, options)
 		.on('ready', !~>
 			@fire('ready')
 		)

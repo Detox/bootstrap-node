@@ -48,7 +48,7 @@
     }
     asyncEventer.call(this);
     detoxCore.ready(function(){
-      this$._core_instance = detoxCore.Core(bootstrap_keypair_seed, bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, options).on('ready', function(){
+      this$._core_instance = detoxCore.Core(bootstrap_nodes, ice_servers, packets_per_second, bucket_size, max_pending_segments, options).on('ready', function(){
         this$.fire('ready');
       }).on('connected_nodes_count', function(count){
         this$.fire('connected_nodes_count', count);
