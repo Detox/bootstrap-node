@@ -7,7 +7,7 @@
 		"distributed",
 		"p2p"
 	],
-	"version"      : "0.1.1",
+	"version"      : "0.1.2",
 	"homepage"     : "https://github.com/Detox/bootstrap-node",
 	"author"       : "Nazar Mokrynskyi <nazar@mokrynskyi.com>",
 	"repository"   : {
@@ -28,7 +28,7 @@
 		"test"                 : "tape tests/**/*.js"
 	},
 	"dependencies" : {
-		"@detox/core"   : "^0.19.2",
+		"@detox/core"   : "^0.20.0",
 		"async-eventer" : "^1.1.7",
 		"yargs"         : "^11.0.0"
 	},
